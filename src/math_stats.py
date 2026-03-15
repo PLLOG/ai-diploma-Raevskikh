@@ -91,3 +91,15 @@ def prob_from_counts(count: int, n: int) -> float:
     if count < 0 or count > n:
         raise ValueError("prob_from_counts: invalid count")
     return count / n
+
+def ci_mean_normal_approx(values, z: float = 1.96):
+    """Приближённый CI для среднего: mean ± z*SEM."""
+    m = mean(values)
+    se = sem(values)
+    return (m - z * se, m + z * se)
+
+def bootstrap_ci_mean(values, n_boot: int = 2000, alpha: float = 0.05, seed: int = 0):
+    means = bootstrap_means(values, n_boot=n_boot, seed=seed)
+    low = float(np.quantile(means, alpha/2))
+    high = float(np.quantile(means, 1 - alpha/2))
+    return low, high
