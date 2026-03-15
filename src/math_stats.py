@@ -76,3 +76,18 @@ def prob_conditional(count_A_and_B: int, count_B: int) -> float:
 def is_independent_by_counts(p_a: float, p_a_given_b: float, tol: float = 0.05) -> bool:
     """Проверка независимости по приближению |P(A|B)-P(A)| <= tol"""
     return abs(p_a_given_b - p_a) <= tol
+
+def bayes_posterior(prior: float, likelihood: float, evidence: float) -> float:
+    for name, p in [("prior", prior), ("likelihood", likelihood), ("evidence", evidence)]:
+        if p < 0 or p > 1:
+            raise ValueError(f"bayes_posterior: {name} must be in [0,1]")
+    if evidence == 0:
+        raise ValueError("bayes_posterior: evidence must be > 0")
+    return (likelihood * prior) / evidence
+
+def prob_from_counts(count: int, n: int) -> float:
+    if n <= 0:
+        raise ValueError("prob_from_counts: n must be > 0")
+    if count < 0 or count > n:
+        raise ValueError("prob_from_counts: invalid count")
+    return count / n
