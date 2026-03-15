@@ -56,3 +56,23 @@ def describe(values: list[float]) -> dict:
         "median": median(values) if values else None,
         "std": std_sample(values) if len(values) >= 2 else None,
     }
+
+def prob_event(count_A: int, n: int) -> float:
+    """P(A) = count(A)/n"""
+    if n <= 0:
+        raise ValueError("prob_event: n must be > 0")
+    if count_A < 0 or count_A > n:
+        raise ValueError("prob_event: invalid count")
+    return count_A / n
+
+def prob_conditional(count_A_and_B: int, count_B: int) -> float:
+    """P(A|B) = count(A∩B)/count(B)"""
+    if count_B <= 0:
+        raise ValueError("prob_conditional: count_B must be > 0")
+    if count_A_and_B < 0 or count_A_and_B > count_B:
+        raise ValueError("prob_conditional: invalid intersection count")
+    return count_A_and_B / count_B
+
+def is_independent_by_counts(p_a: float, p_a_given_b: float, tol: float = 0.05) -> bool:
+    """Проверка независимости по приближению |P(A|B)-P(A)| <= tol"""
+    return abs(p_a_given_b - p_a) <= tol
